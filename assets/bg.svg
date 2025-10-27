@@ -1,0 +1,16 @@
+<!-- bg.svg - subtle decorative background for Credihogar -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#f0f7ff" />
+      <stop offset="1" stop-color="#ffffff" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)" />
+  <!-- decorative houses -->
+  <g fill="#e6f3ff" opacity="0.9">
+    <path d="M100 400 L200 320 L300 400 L300 520 L100 520 Z"/>
+    <path d="M400 460 L520 360 L640 460 L640 620 L400 620 Z"/>
+    <path d="M800 380 L920 300 L1040 380 L1040 520 L800 520 Z"/>
+  </g>
+</svg>

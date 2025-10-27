@@ -1,0 +1,111 @@
+<!doctype html>
+<!--
+  Credihogar - Catálogo Móvil
+  Archivo: index.html
+  Propósito: Entrada principal de la app; muestra catálogo, filtros y panel administrador.
+--> 
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Credihogar - Catálogo</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <!-- logo cambiado a imagen SVG para mejor control visual -->
+        <img src="assets/logo.svg" class="logo" alt="Credihogar" />
+        <div>
+          <h1>Credihogar</h1>
+          <p class="subtitle">Lencria para el Hogar</p>
+        </div>
+      </div>
+      <button id="admin-toggle" class="admin-btn">Panel</button>
+    </header>
+
+    <main>
+      <section class="controls">
+        <select id="category-filter" aria-label="Filtrar por categoría">
+          <option value="all">Todos los productos</option>
+        </select>
+        <input id="search" type="search" placeholder="Buscar producto..." aria-label="Buscar producto" />
+      </section>
+
+      <section id="catalog" class="grid" aria-live="polite">
+        <!-- Productos renderizados por JS, cada uno con contenedor de imagen fijo -->
+      </section>
+    </main>
+
+    <!-- Modal detalle producto -->
+    <div id="product-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <button id="modal-close" class="close">✕</button>
+        <div class="img-container">
+          <img id="modal-image" src="" alt="Imagen del producto" />
+        </div>
+        <div class="modal-body">
+          <h2 id="modal-name"></h2>
+          <p id="modal-desc" class="desc"></p>
+          <p id="modal-price" class="price"></p>
+          <button id="buy-whatsapp" class="buy">Comprar por WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel administrador (slide-in) -->
+    <aside id="admin-panel" class="admin-panel hidden" aria-hidden="true">
+      <div class="admin-header">
+        <h2>Panel del propietario</h2>
+        <button id="admin-close" class="close">✕</button>
+      </div>
+      <form id="product-form">
+        <label>Nombre
+          <input id="p-name" required />
+        </label>
+        <label>Descripción
+          <textarea id="p-desc" rows="3"></textarea>
+        </label>
+        <label>Precio
+          <input id="p-price" type="number" min="0" step="0.01" required />
+        </label>
+        <label>Categoría
+          <select id="p-category"></select>
+        </label>
+        <label>Imagen (jpg/png)
+          <input id="p-image" type="file" accept="image/*" />
+        </label>
+        <div class="row">
+          <button type="submit" class="btn primary">Agregar / Guardar</button>
+          <button type="button" id="clear-form" class="btn ghost">Limpiar</button>
+        </div>
+      </form>
+
+      <section class="admin-settings">
+        <h3>Configuración</h3>
+        <label>Número WhatsApp (sin +, ej. 573001234567)
+          <input id="whatsapp-number" placeholder="" />
+        </label>
+        <label>Contraseña de admin (local)
+          <input id="admin-pass" placeholder="Dejar en blanco para establecer" />
+        </label>
+        <div class="row">
+          <button id="save-settings" class="btn">Guardar</button>
+        </div>
+      </section>
+
+      <section class="admin-list">
+        <h3>Productos</h3>
+        <div id="product-list"></div>
+      </section>
+    </aside>
+
+    <footer class="footer">
+      <small>Diseño optimizado para móviles • Colores: azul y blanco • Tipografía: Poppins</small>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+/* styles.css - Credihogar catalog
+   Mobile-first, clean UI with blue/white palette. */
+
+:root{
+  --blue:#0b74d1; /* primary */
+  --blue-dark:#075ea2;
+  --muted:#6b7280;
+  --bg:#ffffff;
+  --card:#f8fafc;
+  --radius:12px;
+  --gap:12px;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family:'Poppins',system-ui,Arial; 
+  margin:0;padding:0;
+  /* usar background svg y degradado encima para textura ligera */
+  background-image: url('assets/bg.svg');
+  background-size: cover;
+  background-position: center;
+  color:#0f1724;
+}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px;gap:8px;background:transparent;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:44px;height:44px;border-radius:10px;background:var(--blue);color:white;display:grid;place-items:center;font-weight:600}
+.logo img{display:block;width:44px;height:44px;border-radius:8px}
+h1{font-size:18px;margin:0}
+.subtitle{font-size:12px;color:var(--muted);margin:0}
+.admin-btn{background:transparent;border:1px solid var(--blue);color:var(--blue);padding:8px 12px;border-radius:10px}
+
+.controls{display:flex;gap:8px;padding:12px}
+select,input[type="search"]{flex:1;padding:10px;border-radius:10px;border:1px solid #e6eef9;background:white}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
+.card{background:var(--card);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 14px rgba(11,116,209,0.06)}
+.card img{width:100%;height:auto;object-fit:contain;border-radius:8px}
+.card h3{margin:0;font-size:15px}
+.price{font-weight:600;color:var(--blue)}
+.desc{font-size:13px;color:var(--muted);margin:0}
+.card .actions{display:flex;gap:8px;align-items:center}
+.btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
+.btn.primary{background:var(--blue);color:white}
+.btn.ghost{background:transparent;border:1px solid #dbeafe;color:var(--blue)}
+.buy{background:linear-gradient(90deg,var(--blue),var(--blue-dark));color:white;padding:10px;border-radius:10px;border:none;width:100%}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(4,6,10,0.4);display:grid;place-items:center;padding:16px}
+.hidden{display:none}
+.modal-content{background:white;border-radius:14px;max-width:520px;width:100%;overflow:hidden}
+.modal .img-container {
+  width: 100%;
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+.modal img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.modal-body{padding:12px}
+.close{background:transparent;border:none;font-size:18px;cursor:pointer}
+
+/* Admin panel */
+.admin-panel{position:fixed;right:0;top:0;height:100%;width:92%;max-width:420px;background:white;box-shadow:-8px 0 24px rgba(2,6,23,0.08);padding:12px;overflow:auto}
+.admin-header{display:flex;justify-content:space-between;align-items:center}
+form label{display:block;margin-top:8px;font-size:13px}
+input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #eef2ff;margin-top:6px}
+.row{display:flex;gap:8px;margin-top:10px}
+.admin-settings{margin-top:18px}
+.admin-list{margin-top:16px}
+#product-list .item{display:flex;gap:8px;align-items:center;padding:8px;border-radius:10px;background:#f8fafc;margin-top:8px}
+#product-list .img-container {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#product-list img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.footer{padding:12px;text-align:center;color:var(--muted)}
+
+/* Large screens */
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .admin-panel{width:420px}
+}
+
+/* Touch target improvements */
+button,input,select,textarea{touch-action:manipulation}
