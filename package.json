@@ -1,0 +1,14 @@
+{
+  "name": "credihogar-catalog",
+  "version": "1.0.0",
+  "description": "Catálogo Credihogar - frontend + scripts",
+  "main": "app.js",
+  "scripts": {
+    "upload-catalog": "node upload_catalog.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "dotenv": "^16.0.0",
+    "fs-extra": "^11.0.0"
+  }
+}

@@ -61,6 +61,26 @@
         <h2>Panel del propietario</h2>
         <button id="admin-close" class="close">✕</button>
       </div>
+      <!-- Auth: registro / login -->
+      <section class="admin-auth">
+        <h3>Acceso</h3>
+        <div id="auth-signed" class="hidden">
+          <p>Conectado como <span id="auth-email"></span></p>
+          <button id="auth-signout" class="btn ghost">Cerrar sesión</button>
+        </div>
+        <div id="auth-forms">
+          <label>Email
+            <input id="auth-email-input" type="email" placeholder="usuario@ejemplo.com" />
+          </label>
+          <label>Contraseña
+            <input id="auth-pass-input" type="password" placeholder="Contraseña" />
+          </label>
+          <div class="row">
+            <button id="auth-signup" class="btn">Registrarse</button>
+            <button id="auth-signin" class="btn primary">Iniciar sesión</button>
+          </div>
+        </div>
+      </section>
       <form id="product-form">
         <label>Nombre
           <input id="p-name" required />
@@ -107,5 +127,9 @@
     </footer>
 
     <script src="app.js"></script>
+    <!-- Supabase client (UMD) - optional, will be used if config.js provides keys -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+    <!-- Create a local file `config.js` (copy from config.example.js) with your Supabase keys -->
+    <script src="config.js"></script>
   </body>
 </html>

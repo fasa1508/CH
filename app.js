@@ -13,6 +13,76 @@ const CATEGORIES = [
   'manteleria','protectores','sabanas','tendidos estandar','tendidos premium','toallas'
 ];
 
+// Supabase client (inicializa si config.js define keys)
+let supabaseClient = null;
+try{
+  if(window && window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.supabase){
+    supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    console.log('Supabase client initialized');
+  }
+}catch(e){ /* ignore if not available */ }
+
+// --- Supabase Auth helpers & UI wiring (inserted if supabaseClient exists) ---
+async function getCurrentUser(){
+  if(!supabaseClient) return null;
+  try{
+    const { data } = await supabaseClient.auth.getSession();
+    return data?.session?.user || null;
+  }catch(e){ return null; }
+}
+
+function setupAuthUI(){
+  if(!supabaseClient) return;
+  // wire handlers if elements exist
+  try{
+    if(document.getElementById('auth-signup')){
+      document.getElementById('auth-signup').addEventListener('click', async ()=>{
+        const email = document.getElementById('auth-email-input').value.trim();
+        const pass = document.getElementById('auth-pass-input').value;
+        if(!email || !pass) return alert('Email y contraseña son requeridos');
+        const res = await supabaseClient.auth.signUp({ email, password: pass });
+        if(res.error) return alert('Error registro: '+res.error.message);
+        alert('Registro enviado. Revisa tu correo para verificar si aplica.');
+      });
+    }
+    if(document.getElementById('auth-signin')){
+      document.getElementById('auth-signin').addEventListener('click', async ()=>{
+        const email = document.getElementById('auth-email-input').value.trim();
+        const pass = document.getElementById('auth-pass-input').value;
+        if(!email || !pass) return alert('Email y contraseña son requeridos');
+        const res = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+        if(res.error) return alert('Error login: '+res.error.message);
+        await refreshAuthState();
+      });
+    }
+    if(document.getElementById('auth-signout')){
+      document.getElementById('auth-signout').addEventListener('click', async ()=>{
+        await supabaseClient.auth.signOut();
+        await refreshAuthState();
+      });
+    }
+    // listen auth changes
+    supabaseClient.auth.onAuthStateChange(()=>{ refreshAuthState(); });
+  }catch(e){ console.warn('Auth UI wiring error', e); }
+}
+
+async function refreshAuthState(){
+  if(!supabaseClient) return;
+  const user = await getCurrentUser();
+  const signedEl = document.getElementById('auth-signed');
+  const formsEl = document.getElementById('auth-forms');
+  const emailLabel = document.getElementById('auth-email');
+  if(user){
+    if(signedEl) signedEl.classList.remove('hidden');
+    if(formsEl) formsEl.classList.add('hidden');
+    if(emailLabel) emailLabel.textContent = user.email || user.id;
+  }else{
+    if(signedEl) signedEl.classList.add('hidden');
+    if(formsEl) formsEl.classList.remove('hidden');
+  }
+}
+
+
 // Helpers para localStorage
 const STORAGE_KEY = 'credihogar_data_v1';
 function loadState(){
@@ -111,6 +181,19 @@ function renderCatalog(){
   });
 }
 
+// If Supabase is configured, load products from DB
+async function loadFromSupabase(){
+  if(!supabaseClient) return;
+  try{
+    const { data, error } = await supabaseClient.from('products').select('*').order('created_at',{ ascending: false });
+    if(error) { console.error('Supabase fetch error', error); return; }
+    // map DB rows to local state structure
+    state.products = (data || []).map(r=>({ id: r.id, name: r.name, desc: r.description, price: r.price, category: r.category, imageBase64: r.image_url }));
+    renderCatalog();
+    renderAdminList();
+  }catch(e){ console.error(e); }
+}
+
 function formatPrice(v){
   if(!v && v !== 0) return '';
   return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:2}).format(Number(v));
@@ -165,8 +248,36 @@ productForm.addEventListener('submit', async (e)=>{
   const price = pPrice.value.trim();
   const category = pCategory.value;
   let imageBase64 = null;
-  if(pImage.files && pImage.files[0]){
-    try{ imageBase64 = await fileToBase64(pImage.files[0]); }catch(err){ alert('Error leyendo la imagen'); }
+  const file = (pImage.files && pImage.files[0]) ? pImage.files[0] : null;
+
+  // If Supabase configured, upload to Storage and insert product in DB
+  if(supabaseClient){
+    try{
+      // Require authenticated user
+      const user = await getCurrentUser();
+      if(!user){
+        return alert('Debes iniciar sesión para subir productos. Abre el Panel y regístrate/inicia sesión.');
+      }
+      let image_url = '';
+      if(file){
+        const filePath = `${category}/${Date.now()}_${file.name}`;
+        const { data: uploadData, error: uploadError } = await supabaseClient.storage.from('images').upload(filePath, file);
+        if(uploadError){ console.error(uploadError); alert('Error subiendo imagen a Supabase'); }
+        const { publicURL } = supabaseClient.storage.from('images').getPublicUrl(filePath);
+        image_url = publicURL;
+      }
+      const insert = { name, description: desc, price, category, image_url, owner_id: user.id };
+      const { data: inserted, error: insertError } = await supabaseClient.from('products').insert([insert]);
+      if(insertError){ console.error(insertError); alert('Error guardando producto en DB'); }
+      // reload from supabase to refresh UI
+      await loadFromSupabase();
+      resetForm();
+      return;
+    }catch(err){ console.error(err); alert('Error procesando en Supabase'); }
+  }
+
+  if(file){
+    try{ imageBase64 = await fileToBase64(file); }catch(err){ alert('Error leyendo la imagen'); }
   }
 
   if(editId){
@@ -192,7 +303,7 @@ function renderAdminList(){
   state.products.slice().reverse().forEach(p=>{
     const el = document.createElement('div'); el.className='item';
     const imgContainer = document.createElement('div'); imgContainer.className = 'img-container';
-    const img = document.createElement('img'); img.src = p.imageBase64 || '';
+    const img = document.createElement('img'); img.src = p.imageBase64 || ''; img.alt = p.name;
     imgContainer.appendChild(img);
     const name = document.createElement('div'); name.textContent = p.name;
     const controls = document.createElement('div'); controls.style.marginLeft='auto';
@@ -264,8 +375,16 @@ function init(){
   populateCategories();
   // volcar settings a UI
   if(state.settings){ whatsappInput.value = state.settings.whatsapp || ''; adminPassInput.value = state.settings.adminPass || ''; }
-  renderCatalog();
-  renderAdminList();
+  // If Supabase is configured, load from it; otherwise use local state
+  if(supabaseClient){
+    loadFromSupabase();
+    // wire auth UI and refresh auth state
+    setupAuthUI();
+    refreshAuthState();
+  }else{
+    renderCatalog();
+    renderAdminList();
+  }
 }
 
 init();
