@@ -1,0 +1,13 @@
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build]
+  publish = "."
+  command = "echo 'No build command needed for static site'"
+
+[build.environment]
+  # No se necesitan variables de entorno aquí porque las credenciales
+  # de Supabase están en config.js (público y seguro con RLS)
+  NODE_VERSION = "18"

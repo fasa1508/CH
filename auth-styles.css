@@ -1,0 +1,87 @@
+/* Estilos para autenticación */
+.auth-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.auth-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.auth-btn:hover {
+  background: var(--blue-dark);
+}
+
+#auth-modal .modal-content {
+  max-width: 400px;
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  font-size: 16px;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.btn-primary:hover {
+  background: var(--blue-dark);
+}
+
+.btn-secondary {
+  width: 100%;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background: #059669;
+}
+
+.error-message {
+  color: #dc2626;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none !important;
+}
