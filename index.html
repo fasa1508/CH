@@ -132,24 +132,7 @@
       <small>Credi Hogar 🏠 Decoramos tu hogar con estilo y facilidad</small>
     </footer>
 
-    <!-- Aviso de actualización en vivo -->
-    <div id="update-banner" style="
-      position: fixed; left: 16px; right: 16px; bottom: 16px;
-      background: #0ea5e9; color: #fff; border-radius: 12px;
-      padding: 12px 16px; display: none; z-index: 9999;
-      box-shadow: 0 10px 20px rgba(2,132,199,.3); font-family: Poppins, system-ui, sans-serif;
-      align-items: center; justify-content: space-between; gap: 12px;
-    ">
-      <span>Hay una versión nueva del catálogo. Actualiza para ver los cambios.</span>
-      <div style="display:flex; gap:8px">
-        <button id="update-reload" style="
-          background:#fff;color:#0ea5e9;border:0;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer
-        ">Actualizar</button>
-        <button id="update-dismiss" style="
-          background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:8px;padding:8px 12px;cursor:pointer
-        ">Luego</button>
-      </div>
-    </div>
+    <!-- Notificador de actualizaciones desactivado para evitar mensajes persistentes -->
 
     <!-- Supabase Client (versión específica para estabilidad) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
@@ -187,7 +170,6 @@
     <!-- Main Application -->
     <script src="app.js"></script>
 
-    <!-- Notificador de nuevas versiones: recarga cuando hay despliegues -->
-    <script src="update-notifier.js"></script>
+    <!-- Notificador de actualizaciones desactivado -->
   </body>
 </html>
