@@ -56,6 +56,7 @@ class AuthManager {
         // Logout button
         this.ui.logoutBtn?.addEventListener('click', async () => {
             await this.handleLogout();
+            window.location.reload();
         });
     }
 

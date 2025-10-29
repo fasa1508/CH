@@ -241,22 +241,22 @@ class AdminPanel {
                 }).format(value);
                 
                 item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px;">
+                    <div class="admin-product-item">
                         <img src="${product.image_url || 'assets/placeholder.jpg'}" 
                              alt="${product.name}" 
-                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
-                        <div style="flex: 1;">
-                            <strong>${product.name}</strong>
-                            <p style="color: #666; font-size: 14px; margin: 4px 0;">${formattedPrice}</p>
-                            <small style="color: #999;">${product.category}</small>
+                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">
+                        <div class="admin-product-info">
+                            <strong style="font-size: 15px; color: #1e293b; display: block; margin-bottom: 4px;">${product.name}</strong>
+                            <p style="color: var(--blue); font-size: 14px; font-weight: 600; margin: 4px 0;">${formattedPrice}</p>
+                            <small style="color: var(--muted); font-size: 12px;">${product.category}</small>
                         </div>
-                        <div style="display: flex; gap: 8px;">
+                        <div class="admin-product-actions">
                             <button onclick="window.adminPanel.editProduct('${product.id}')" 
-                                    class="btn ghost" style="padding: 6px 12px; font-size: 14px;">
+                                    class="btn edit">
                                 Editar
                             </button>
                             <button onclick="window.adminPanel.deleteProduct('${product.id}')" 
-                                    class="btn ghost" style="padding: 6px 12px; font-size: 14px; color: #dc2626;">
+                                    class="btn delete">
                                 Eliminar
                             </button>
                         </div>
