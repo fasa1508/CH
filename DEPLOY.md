@@ -156,7 +156,7 @@ Ejecuta el script `supabase_setup.sql` en tu SQL Editor de Supabase:
 
 ## 📞 WhatsApp Integration
 
-Configurado para enviar mensajes a: **+57 314 618 9060**
+Configurado para enviar mensajes a: **+57 317 788 4743**
 
 Formato del mensaje:
 ```
