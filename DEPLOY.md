@@ -1,6 +1,6 @@
-# Credihogar - Catálogo Móvil con Supabase
+# Credihogar - Catálogo Móvil (PHP + MySQL)
 
-![Credihogar](https://img.shields.io/badge/Status-Producción-success) ![Netlify](https://img.shields.io/badge/Deploy-Netlify-blue)
+![Credihogar](https://img.shields.io/badge/Status-Producción-success) ![Hosting](https://img.shields.io/badge/Deploy-Hosting%20Linux-blue)
 
 ## 📋 Descripción
 
@@ -12,14 +12,14 @@ Catálogo móvil profesional para Credihogar que permite al dueño gestionar pro
 - **Catálogo Público**: Navegación por categorías, búsqueda y filtros
 - **Integración WhatsApp**: Compra directa con mensaje prellenado
 - **Responsive**: Diseño mobile-first optimizado para todos los dispositivos
-- **Almacenamiento Cloud**: Supabase PostgreSQL + Storage para imágenes
-- **Autenticación**: Login seguro con Supabase Auth
+- **Almacenamiento**: Sistema de archivos local (carpeta uploads/) con optimización de imágenes
+- **Autenticación**: Sesiones PHP (login seguro con hash de contraseña)
 
 ## 🛠️ Stack Tecnológico
 
 - **Frontend**: Vanilla JavaScript (ES6), HTML5, CSS3
-- **Backend**: Supabase (PostgreSQL + Storage + Auth)
-- **Hosting**: Netlify
+- **Backend**: PHP + MySQL (PDO) + sesiones
+- **Hosting**: Linux (Apache con mod_rewrite)
 - **Estilo**: Mobile-first responsive, Poppins font
 
 ## 📁 Estructura de Archivos
@@ -31,65 +31,51 @@ CH/
 ├── admin.js            # Panel de administración
 ├── auth.js             # Sistema de autenticación
 ├── styles.css          # Estilos profesionales
-├── config.js           # Configuración Supabase
-├── netlify.toml        # Configuración de deployment
-├── supabase_setup.sql  # Schema de base de datos
+├── config-mysql.js     # Configuración API PHP (reemplaza config.js)
+├── mysql_setup.sql     # Esquema de base de datos MySQL
+├── api/                # API PHP (auth, products, categories, upload)
+├── uploads/            # Carpeta pública de imágenes
 └── assets/             # Recursos estáticos
 ```
 
-## 🚀 Deployment en Netlify
+## 🚀 Deployment en Hosting Linux (Apache + PHP + MySQL)
 
 ### Paso 1: Preparación
 
-1. Asegúrate de tener una cuenta en [Netlify](https://netlify.com)
-2. Instala Git si no lo tienes (opcional pero recomendado)
+1. Hosting Linux con PHP 7.4+, MySQL 5.7+ (o MariaDB 10.3+) y Apache 2.4 con mod_rewrite
+2. Acceso a phpMyAdmin o consola MySQL
+3. Acceso FTP/SFTP o Git en el servidor
 
-### Paso 2: Configurar Supabase
+### Paso 2: Crear Base de Datos MySQL
 
-1. Ve a tu proyecto en [Supabase](https://supabase.com/dashboard)
-2. En **Settings → API**, copia tu `URL` y `anon key`
-3. En **Configuration → URL Configuration**, agrega tu dominio de Netlify:
-   ```
-   https://tu-sitio.netlify.app
-   ```
+1. Entra a phpMyAdmin (o consola) y crea una base de datos (ej: `credihogar_db`)
+2. Importa el archivo `mysql_setup.sql`
+3. Crea un usuario con permisos sobre esa base de datos
 
-### Paso 3: Deploy con Netlify
+### Paso 3: Configurar API PHP
 
-#### Opción A: Desde Git (Recomendado)
+1. Copia `api/config.example.php` a `api/config.php`
+2. Edita `api/config.php` con tus credenciales de MySQL y tu dominio (`BASE_URL`)
+3. Asegura que el directorio `uploads/products/` exista y tenga permisos de escritura (chmod 777 si es necesario)
 
-1. Crea un repositorio en GitHub con tu código
-2. En Netlify, haz clic en "Import from Git"
-3. Selecciona tu repositorio
-4. Configuración automática (lee `netlify.toml`)
-5. Haz clic en "Deploy"
+### Paso 4: Subir Archivos al Hosting
 
-#### Opción B: Deploy Manual (Arrastrar y Soltar)
+1. Sube todo el contenido del proyecto a `public_html/` (o la carpeta pública de tu hosting)
+2. Verifica que existe `.htaccess` en la raíz y en `api/`
+3. Edita `config-mysql.js` y establece `window.API_BASE_URL` con la URL de tu dominio
 
-1. Ve a [Netlify Drop](https://app.netlify.com/drop)
-2. Arrastra toda la carpeta del proyecto (excepto `node_modules` si existe)
-3. Netlify desplegará automáticamente
+### Paso 5: Verificación Post-Deploy
 
-### Paso 4: Configuración Post-Deploy
+1. Abre tu dominio en el navegador
+2. Inicia sesión con el usuario admin (por defecto: `admin@credihogar.com` / `admin123`) y CAMBIA la contraseña
+3. Crea un producto de prueba y sube una imagen
+4. Verifica que el catálogo público muestre los productos y las imágenes
 
-1. **Actualizar Supabase CORS**:
-   - Ve a Supabase → Settings → API
-   - Agrega tu URL de Netlify a la whitelist de CORS
-
-2. **Configurar dominio personalizado** (opcional):
-   - En Netlify: Site settings → Domain management
-   - Agrega tu dominio personalizado
-
-3. **Verificar deployment**:
-   - Abre tu URL de Netlify
-   - Prueba el login con tu usuario admin
-   - Verifica que las imágenes cargan correctamente
-
-## 🧪 Desarrollo Local
+## 🧪 Desarrollo Local (XAMPP/WAMP/Laragon)
 
 ### Requisitos
 
-- Node.js v18+ (solo para live-server)
-- Cuenta Supabase configurada
+- PHP + MySQL (incluidos en XAMPP/WAMP/Laragon)
 
 ### Instalación
 
@@ -99,33 +85,24 @@ git clone https://github.com/tu-usuario/credihogar.git
 cd credihogar
 ```
 
-2. Instala live-server (opcional):
-```bash
-npm install -g live-server
-```
+2. Configura API local:
+   - Copia `api/config.example.php` a `api/config.php`
+   - Usa credenciales locales (XAMPP: usuario `root`, sin password)
+   - BASE_URL: `http://localhost/CH`
 
-3. Configura `config.js` con tus credenciales de Supabase:
-```javascript
-window.SUPABASE_URL = "tu_url_de_supabase";
-window.SUPABASE_ANON_KEY = "tu_anon_key";
-```
+3. Configura frontend:
+   - En `config-mysql.js` establece `window.API_BASE_URL = 'http://localhost/CH/api'`
 
-4. Ejecuta el servidor local:
-```bash
-live-server
-```
-
-5. Abre http://127.0.0.1:8080
+4. Abre en el navegador: `http://localhost/CH`
 
 ## 🗄️ Configuración de Base de Datos
 
-Ejecuta el script `supabase_setup.sql` en tu SQL Editor de Supabase:
+Ejecuta el script `mysql_setup.sql` en phpMyAdmin o consola MySQL para crear las tablas necesarias:
 
-```sql
--- Crea las tablas: products, profiles
--- Configura Row Level Security (RLS)
--- Ver supabase_setup.sql para el script completo
-```
+- users
+- categories
+- products
+- sessions
 
 ## 📱 Uso
 
@@ -149,19 +126,18 @@ Ejecuta el script `supabase_setup.sql` en tu SQL Editor de Supabase:
 
 ## 🔐 Seguridad
 
-- Row Level Security (RLS) habilitado en todas las tablas
-- Autenticación con Supabase Auth
-- Políticas de Storage para lectura pública y escritura autenticada
-- CORS configurado solo para dominios autorizados
+- Cambia la contraseña del usuario admin por defecto
+- Genera una clave única para `JWT_SECRET` en `api/config.php`
+- Mantén `api/config.php` fuera del control de versiones (está en `.gitignore`)
+- Asegura permisos correctos en `uploads/`
 
-## 📞 WhatsApp Integration
+## 📞 Integración con WhatsApp
 
-Configurado para enviar mensajes a: **+57 317 788 4743**
-
-Formato del mensaje:
-```
-Hola, estoy interesado en el producto [Nombre del Producto]
-```
+El botón "Comprar por WhatsApp" abre un chat con mensaje prellenado:
+- Nombre del producto
+- Descripción
+- Precio formateado
+- Enlace a la imagen (vista previa automática)
 
 ## 🎨 Categorías Disponibles
 

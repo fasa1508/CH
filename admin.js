@@ -19,7 +19,7 @@ const DEFAULT_CATEGORIES = [
 class AdminPanel {
     constructor() {
         if (!window.supabaseClient) {
-            console.error('❌ Cliente Supabase no encontrado');
+            console.error('❌ Cliente de API no encontrado');
             return;
         }
 
@@ -144,14 +144,16 @@ class AdminPanel {
                 const { error } = await this.supabase
                     .from('products')
                     .update(productData)
-                    .eq('id', this.currentProduct.id);
+                    .eq('id', this.currentProduct.id)
+                    .select();
 
                 if (error) throw error;
                 alert('✅ Producto actualizado exitosamente');
             } else {
                 const { error } = await this.supabase
                     .from('products')
-                    .insert([productData]);
+                    .insert(productData)
+                    .select();
 
                 if (error) throw error;
                 alert('✅ Producto creado exitosamente');
@@ -174,29 +176,20 @@ class AdminPanel {
 
     async uploadImage(file) {
         try {
-            // Generar nombre único para la imagen
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `products/${fileName}`;
-
-            console.log('Subiendo imagen:', filePath);
+            console.log('Subiendo imagen...');
 
             const { data, error } = await this.supabase.storage
                 .from('images')
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
+                .upload('', file);
 
             if (error) {
                 console.error('Error al subir imagen:', error);
                 throw error;
             }
-
-            // Obtener URL pública
+            // Obtener URL pública a partir de la ruta devuelta por la API
             const { data: urlData } = this.supabase.storage
                 .from('images')
-                .getPublicUrl(filePath);
+                .getPublicUrl(data.path);
 
             console.log('✅ Imagen subida:', urlData.publicUrl);
             return urlData.publicUrl;

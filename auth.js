@@ -2,9 +2,9 @@
 
 class AuthManager {
     constructor() {
-        // Esperar a que el cliente de Supabase esté disponible
+        // Verificar que el cliente de API esté disponible
         if (!window.supabaseClient) {
-            console.error('Error: Cliente Supabase no encontrado');
+            console.error('Error: Cliente de API no encontrado');
             return;
         }
 
@@ -209,18 +209,9 @@ class AuthManager {
             this.ui.loginBtn?.classList.add('hidden');
             this.ui.logoutBtn?.classList.remove('hidden');
 
-            try {
-                const { data: profile } = await this.supabase
-                    .from('profiles')
-                    .select('is_admin')
-                    .eq('id', user.id)
-                    .single();
-
-                if (profile?.is_admin) {
-                    this.ui.adminBtn?.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error al verificar rol de admin:', error);
+            // Con la nueva API, el rol viene en el objeto de usuario
+            if (user.is_admin || user.role === 'admin') {
+                this.ui.adminBtn?.classList.remove('hidden');
             }
         } else {
             this.ui.loginBtn?.classList.remove('hidden');
@@ -243,13 +234,15 @@ class AuthManager {
     checkInitialSession() {
         // No hacer onAuthStateChange inmediatamente para evitar peticiones extra
         // Solo verificar sesión cuando sea necesario
-        this.supabase.auth.getSession().then(({ data: { session }}) => {
-            if (session?.user) {
-                this.updateUIState(session.user);
-            }
-        }).catch(err => {
-            console.error('Error al obtener sesión inicial:', err);
-        });
+        this.supabase.auth.getSession()
+            .then(({ data: { user } }) => {
+                if (user) {
+                    this.updateUIState(user);
+                }
+            })
+            .catch(err => {
+                console.error('Error al obtener sesión inicial:', err);
+            });
     }
 }
 

@@ -26,3 +26,23 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# PHP/MySQL Configuration
+api/config.php
+config-local.js
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+!uploads/products/.gitkeep
+
+# Database dumps
+*.sql.gz
+*.sql.backup
+database-backup/
+
+# Sensitive files
+.env
+.env.local
+*.pem
+*.key

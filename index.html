@@ -134,32 +134,8 @@
 
     <!-- Notificador de actualizaciones desactivado para evitar mensajes persistentes -->
 
-    <!-- Supabase Client (versión específica para estabilidad) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
-    
-    <!-- Configuration -->
-    <script src="config.js"></script>
-
-    <!-- Script de inicialización: crear window.supabaseClient antes de cargar los módulos de la app -->
-    <script>
-      // Inicializar inmediatamente sin esperar DOMContentLoaded
-      if (typeof supabase !== 'undefined' && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
-        window.supabaseClient = supabase.createClient(
-          window.SUPABASE_URL,
-          window.SUPABASE_ANON_KEY,
-          {
-            auth: {
-              autoRefreshToken: true,
-              persistSession: true,
-              detectSessionInUrl: false
-            }
-          }
-        );
-        console.log('✅ Supabase client creado');
-      } else {
-        console.error('❌ No se pudo crear el cliente de Supabase');
-      }
-    </script>
+    <!-- API Client para MySQL/PHP (reemplazo de Supabase) -->
+    <script src="config-mysql.js"></script>
 
     <!-- Auth Manager -->
     <script src="auth.js"></script>
